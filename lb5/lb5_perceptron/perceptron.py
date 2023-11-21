@@ -7,17 +7,22 @@ class Perceptron:
         self.number_of_iterations = number_of_iterations    # Liczba iteracji
         self.weights = None
         self.bias = None
+        self.saved_weights = None
 
     def fit(self, X, y):
         # Trenowanie modelu na danych X(cechy) i y(etykiety)
         n_samples, n_features = X.shape
+        # self.saved_weights = np.array([X.shape[0], self.number_of_iterations+1])
 
         # Inicjalizacja wag i biasu
         self.weights = np.zeros(n_features)
         self.bias = 0
 
+        self.saved_weights = np.zeros((self.number_of_iterations+1, len(self.weights)))
+        self.saved_weights[0,:] = self.weights
+
         # Pętla ucząca
-        for _ in range(self.number_of_iterations):
+        for i in range(self.number_of_iterations):
             # for idx, x_i in enumerate(X):
             for x_i, target in zip(X, y):
                 # Obliczenie wyjścia liniowego
@@ -29,6 +34,7 @@ class Perceptron:
                 update = self.learning_rate * (target - y_predicted)
                 self.weights += update * x_i
                 self.bias += update
+                self.saved_weights[i+1, :] = self.weights
 
     def predict(self, X):
         # Przewidywanie etykier dla nowych danych
@@ -59,8 +65,13 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_
 
 # Trenowanie modelu
 #
-# perceptron = Perceptron(learning_rate=0.01, number_of_iterations=1000)
-perceptron = Perceptron(learning_rate=0.1, number_of_iterations=1000)
+perceptron = Perceptron(learning_rate=0.01, number_of_iterations=1000)
+# perceptron = Perceptron(learning_rate=0.1, number_of_iterations=1000)
+# perceptron = Perceptron(learning_rate=0.5, number_of_iterations=1000)
+
+# perceptron = Perceptron(learning_rate=0.1, number_of_iterations=100)
+# perceptron = Perceptron(learning_rate=0.1, number_of_iterations=50)
+
 perceptron.fit(X_train, y_train)
 
 # print(perceptron.weights)
@@ -68,8 +79,20 @@ perceptron.fit(X_train, y_train)
 # Uzycie modelu
 predictions = perceptron.predict(X_test)
 
-print(perceptron.weights)
+import matplotlib.pyplot as plt
+
+# print(perceptron.weights)
 print(predictions)
+print(perceptron.saved_weights)
 
 accuracy = np.mean(predictions == y_test)
 print(f"Accuracy: {accuracy * 100:.2f}%")
+
+plt.plot(range(0, perceptron.saved_weights.shape[0]), perceptron.saved_weights[:,0], marker='o', label="w0", color="red")
+plt.plot(range(0, perceptron.saved_weights.shape[0]), perceptron.saved_weights[:,1], marker='o', label="w1", color="green")
+plt.plot(range(0, perceptron.saved_weights.shape[0]), perceptron.saved_weights[:,2], marker='o', label="w2", color="blue")
+plt.plot(range(0, perceptron.saved_weights.shape[0]), perceptron.saved_weights[:,3], marker='o', label="w3", color="yellow")
+plt.xlabel("Changes")
+plt.ylabel("Weights")
+plt.legend(loc="lower left")
+plt.show()
