@@ -8,6 +8,7 @@ class Perceptron:
         self.weights = None
         self.bias = None
         self.saved_weights = None
+        self.saved_accuracy = None
 
     def fit(self, X, y):
         # Trenowanie modelu na danych X(cechy) i y(etykiety)
@@ -65,7 +66,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_
 
 # Trenowanie modelu
 #
-perceptron = Perceptron(learning_rate=0.01, number_of_iterations=1000)
+perceptron = Perceptron(learning_rate=0.01, number_of_iterations=50)
 # perceptron = Perceptron(learning_rate=0.1, number_of_iterations=1000)
 # perceptron = Perceptron(learning_rate=0.5, number_of_iterations=1000)
 
@@ -79,14 +80,14 @@ perceptron.fit(X_train, y_train)
 # Uzycie modelu
 predictions = perceptron.predict(X_test)
 
-import matplotlib.pyplot as plt
-
 # print(perceptron.weights)
 print(predictions)
 print(perceptron.saved_weights)
 
 accuracy = np.mean(predictions == y_test)
 print(f"Accuracy: {accuracy * 100:.2f}%")
+
+import matplotlib.pyplot as plt
 
 plt.plot(range(0, perceptron.saved_weights.shape[0]), perceptron.saved_weights[:,0], marker='o', label="w0", color="red")
 plt.plot(range(0, perceptron.saved_weights.shape[0]), perceptron.saved_weights[:,1], marker='o', label="w1", color="green")
