@@ -36,3 +36,21 @@ autoencoder.compile(optimizer="adam", loss="mean_squared_error")
 
 # Training the model
 autoencoder.fit(X_train, X_train, epochs=50, batch_size=256, shuffle=True, validation_data=(X_test, X_test))
+
+import matplotlib.pyplot as plt
+# loss, accuracy = autoencoder.evaluate(X_test, X_test, batch_size=256)
+# plt.plot(X_train, label='Input')
+# plt.plot(accuracy, label='accuracy')
+# plt.title('Data visualisation')
+# plt.xlabel('Time')
+# plt.ylabel('Value')
+# plt.legend()
+# plt.show()
+
+fig, axs = plt.subplots(2)
+
+axs[0].plot(X_train, label='Input')
+axs[0].set_title('Input')
+axs[1].plot(autoencoder.predict(X_train, batch_size=256), label='Output')
+axs[1].set_title('Output')
+plt.show()
